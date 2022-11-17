@@ -7,7 +7,6 @@ import { Input, ButtonSearch, Form } from './Movie-styled';
 
 const Movies = () => {
   const [inputValue, setInputValue] = useState('');
-  const [searchWord, setSearchWord] = useState('');
   const [moviesSearch, setMoviesSearch] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query');
@@ -21,25 +20,18 @@ const Movies = () => {
     if (inputValue === '') {
       return setTimeout(Notify.info('Please enter search data.'), 3000);
     } else {
-      setSearchWord(inputValue);
+      // setSearchWord(inputValue);
       setSearchParams({ query: inputValue });
     }
   };
 
   useEffect(() => {
-    if (query) {
-      setSearchWord(query);
-    }
-  }, [query]);
-
-  useEffect(() => {
-    if (searchWord === '') {
+    if (query === '') {
       return;
     } else {
-      fetchSearchFilms(searchWord)
+      fetchSearchFilms(query)
         .then(movie => {
           setMoviesSearch(movie.results);
-          setSearchWord('');
           setInputValue('');
           if (movie.results.length === 0) {
             Notify.info('We did not find any movies for this request.');
@@ -47,7 +39,7 @@ const Movies = () => {
         })
         .catch(error => console.log(error));
     }
-  }, [searchWord]);
+  }, [query]);
 
   return (
     <main>
